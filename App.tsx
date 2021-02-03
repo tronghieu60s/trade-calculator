@@ -1,8 +1,10 @@
-import React from 'react';
-import { Dimensions } from 'react-native';
+import React, { useEffect } from "react";
+import { Dimensions } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SceneMap, TabView } from "react-native-tab-view";
-import FirstRoute from './components/FirstRoute';
-import SecondRoute from './components/SecondRoute';
+import FirstRoute from "./src/components/FirstRoute";
+import SecondRoute from "./src/components/SecondRoute";
+import { initDbTable } from "./src/utils/SQLite";
 
 const initialLayout = { width: Dimensions.get("window").width };
 
@@ -18,12 +20,20 @@ export default function App() {
     second: SecondRoute,
   });
 
+  useEffect(() => {
+    (async () => {
+      await initDbTable();
+    })();
+  }, []);
+
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={initialLayout}
-    />
+    <SafeAreaView style={{ flex: 1 }}>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+      />
+    </SafeAreaView>
   );
 }
