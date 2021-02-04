@@ -12,3 +12,15 @@ export const createProduct = (product: Product) => {
     [name_product, price_product]
   );
 };
+
+export const deleteProductById = (id_product: number) => {
+  return executeSql(`delete from products where id_product = ?`, [id_product]);
+};
+
+export const updateProductById = (product: Product) => {
+  const { id_product, name_product, price_product } = product;
+  return executeSql(
+    `update products set name_product = ?, price_product = ? where id_product = ?`,
+    [name_product, price_product, id_product]
+  );
+};

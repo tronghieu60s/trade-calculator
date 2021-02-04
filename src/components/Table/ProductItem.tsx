@@ -1,20 +1,49 @@
+import { Feather } from "@expo/vector-icons";
 import React, { memo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Product } from "../../../types";
+import { cvNumToCurrency } from "../../helpers/convert";
+import { Ripple } from "../Themed";
 
 type Props = {
   product: Product;
+  onPressUpdate: (product: Product) => void;
+  handleDeleteProduct: (id_product: number) => void;
 };
 
 export default memo(function ProductItem(props: Props) {
-  const { id_product, name_product, price_product } = props.product;
-  
+  const { product, onPressUpdate, handleDeleteProduct } = props;
+  const { id_product, name_product, price_product } = product;
+
+  const onPressDelete = () => {
+    Alert.alert(
+      "Xóa",
+      "Bạn có muốn xóa sản phẩm này không?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel",
+        },
+        { text: "Xóa", onPress: () => handleDeleteProduct(id_product) },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={[styles.item, styles.itemCode]}>{id_product}</Text>
-      <Text style={[styles.item, { borderRightWidth: 1 }]}>{name_product}</Text>
-      <Text style={styles.item}>
-        {price_product.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Đ/Kg
+      <Text style={[styles.item, { flex: 3 }]}>{name_product}</Text>
+      <Text style={[styles.item, { flex: 3 }]}>
+        {cvNumToCurrency(price_product)}
+      </Text>
+      <Text style={[styles.item, { flex: 2, borderRightWidth: 0 }]}>
+        <Ripple style={{ padding: 5 }} onPress={() => onPressUpdate(product)}>
+          <Feather name="edit" size={17} color="black" />
+        </Ripple>
+        <Ripple style={{ padding: 5 }} onPress={onPressDelete}>
+          <Feather name="trash" size={17} color="black" />
+        </Ripple>
       </Text>
     </View>
   );
@@ -24,6 +53,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 5,
     borderBottomWidth: 1,
     borderColor: "#dee2e6",
@@ -34,10 +65,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     paddingVertical: 10,
     borderColor: "#dee2e6",
+    borderRightWidth: 1,
   },
   itemCode: {
-    flex: 3,
+    flex: 2,
     fontWeight: "bold",
-    borderRightWidth: 1,
   },
 });

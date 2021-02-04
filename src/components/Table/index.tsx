@@ -1,25 +1,68 @@
-import React, { memo, ReactNode, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { memo, ReactNode, useContext, useState } from "react";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Product } from "../../../types";
-import { getProducts } from "../../models/ProductsModel";
+import ProductsContext from "../../contexts/ProductsContext";
+import { cvCurrencyToNum, cvNumToCurrency } from "../../helpers/convert";
+import { deleteProductById, getProducts, updateProductById } from "../../models/ProductsModel";
 import ProductItem from "./ProductItem";
+import ProductModal from "./ProductModal";
 
 export default memo(function Table() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { products, setProducts } = useContext(ProductsContext);
 
-  useEffect(() => {
-    (async () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => setModalVisible(!modalVisible);
+
+  const [id, onChangeId] = useState(-1);
+  const [name, onChangeName] = useState("");
+  const [price, onChangePrice] = useState("");
+  
+  const handleDeleteProduct = async (id_product: number) => {
+    const response = await deleteProductById(id_product);
+    if (response.rowsAffected > 0) {
+      ToastAndroid.show("Xóa sản phẩm thành công", ToastAndroid.SHORT);
+
       const { data } = await getProducts();
-      if(data !== null) setProducts(data);
-    })();
-  }, []);
+      setProducts(data);
+    }
+  };
+
+  const onPressUpdate = (product: Product) => {
+    const {id_product,name_product, price_product} = product;
+    onChangeId(id_product);
+    onChangeName(name_product);
+    onChangePrice(cvNumToCurrency(price_product));
+    toggleModal();
+  };
+
+  const handleUpdateProduct = async () => {
+    const product: Product = {
+      id_product: id,
+      name_product: name,
+      price_product: cvCurrencyToNum(price),
+    };
+    const response = await updateProductById(product);
+    if (response.rowsAffected > 0) {
+      ToastAndroid.show("Sửa sản phẩm thành công", ToastAndroid.SHORT);
+      toggleModal();
+
+      const { data } = await getProducts();
+      setProducts(data);
+    }
+  }
 
   const renderProductItem = (products: Product[]) => {
     let result: ReactNode = null;
-    result = products.map((product) => (
-      <ProductItem key={product.id_product} product={product} />
-    ));
+    if (products !== null)
+      result = products.map((product) => (
+        <ProductItem
+          key={product.id_product}
+          product={product}
+          onPressUpdate={onPressUpdate}
+          handleDeleteProduct={handleDeleteProduct}
+        />
+      ));
     return result;
   };
 
@@ -27,15 +70,25 @@ export default memo(function Table() {
     <ScrollView>
       <View style={styles.table}>
         <View style={styles.head}>
-          <Text style={[styles.text, { flex: 3, borderRightWidth: 1 }]}>
-            Mã SP
+          <Text style={[styles.text, { flex: 2 }]}>Mã SP</Text>
+          <Text style={[styles.text, { flex: 3 }]}>Tên sản phẩm</Text>
+          <Text style={[styles.text, { flex: 3 }]}>Giá tiền / Kg</Text>
+          <Text style={[styles.text, { flex: 2, borderRightWidth: 0 }]}>
+            HĐ
           </Text>
-          <Text style={[styles.text, { borderRightWidth: 1 }]}>
-            Tên sản phẩm
-          </Text>
-          <Text style={styles.text}>Giá tiền / Kg</Text>
         </View>
         {renderProductItem(products)}
+        <ProductModal
+          title="Sửa sản phẩm"
+          modalVisible={modalVisible}
+          toggleModal={toggleModal}
+          name={name}
+          price={price}
+          onChangeName={onChangeName}
+          onChangePrice={onChangePrice}
+          titleButton="Sửa"
+          onPressButton={handleUpdateProduct}
+        />
       </View>
     </ScrollView>
   );
@@ -60,5 +113,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingVertical: 10,
     borderColor: "#dee2e6",
+    borderRightWidth: 1,
   },
 });

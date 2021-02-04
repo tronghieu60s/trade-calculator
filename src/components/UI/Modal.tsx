@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import {
   Modal as DefaultModal,
   StyleSheet,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -9,12 +10,13 @@ import {
 
 type Props = {
   children: JSX.Element;
+  title: string;
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
 };
 
 export default memo(function Modal(props: Props) {
-  const { children, modalVisible, setModalVisible } = props;
+  const { children, title, modalVisible, setModalVisible } = props;
 
   return (
     <DefaultModal
@@ -29,7 +31,10 @@ export default memo(function Modal(props: Props) {
         style={styles.container}
       >
         <TouchableWithoutFeedback>
-          <View style={styles.modal}>{children}</View>
+          <View style={styles.modal}>
+            <Text style={styles.title}>{title}</Text>
+            {children}
+          </View>
         </TouchableWithoutFeedback>
       </TouchableOpacity>
     </DefaultModal>
@@ -49,5 +54,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000000ba",
+  },
+  title: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+    marginBottom: 20,
   },
 });
