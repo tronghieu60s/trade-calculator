@@ -13,7 +13,7 @@ const initialLayout = { width: Dimensions.get("window").width };
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
-
+  
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: "first", title: "Tính Toán" },
@@ -30,7 +30,7 @@ export default function App() {
       await initDbTable();
 
       const { data } = await getProducts();
-      setProducts(data);
+      setProducts(data || []);
     })();
   }, []);
 

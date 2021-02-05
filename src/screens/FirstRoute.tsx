@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   total: {
-    color: '#172b4d',
+    color: "#f5365c",
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
   },
 });

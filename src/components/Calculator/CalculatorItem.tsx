@@ -24,8 +24,9 @@ export default memo(function CalculatorItem(props: Props) {
   const { id_product, name_product, price_product } = product;
 
   const color = switch_value ? "#5e72e4" : "#767577";
+  const borderColor = switch_value ? "#5e72e4" : "#8898aa";
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { borderColor }]}>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.switch}>
           <Switch
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1.5,
-    borderColor: "#8898aa",
     borderRadius: 4,
+    backgroundColor: "#fff",
   },
   switch: {
     flex: 1,
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   price: {
+    color: "#767577",
     letterSpacing: 1,
     fontWeight: "bold",
   },
