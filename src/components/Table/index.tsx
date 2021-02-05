@@ -4,7 +4,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Product } from "../../../types";
 import ProductsContext from "../../contexts/ProductsContext";
 import { cvCurrencyToNum, cvNumToCurrency } from "../../helpers/convert";
-import { deleteProductById, getProducts, updateProductById } from "../../models/ProductsModel";
+import {
+  deleteProductById,
+  getProducts,
+  updateProductById,
+} from "../../models/ProductsModel";
 import ProductItem from "./ProductItem";
 import ProductModal from "./ProductModal";
 
@@ -17,7 +21,7 @@ export default memo(function Table() {
   const [id, onChangeId] = useState(-1);
   const [name, onChangeName] = useState("");
   const [price, onChangePrice] = useState("");
-  
+
   const handleDeleteProduct = async (id_product: number) => {
     const response = await deleteProductById(id_product);
     if (response.rowsAffected > 0) {
@@ -29,7 +33,7 @@ export default memo(function Table() {
   };
 
   const onPressUpdate = (product: Product) => {
-    const {id_product,name_product, price_product} = product;
+    const { id_product, name_product, price_product } = product;
     onChangeId(id_product);
     onChangeName(name_product);
     onChangePrice(cvNumToCurrency(price_product));
@@ -50,7 +54,7 @@ export default memo(function Table() {
       const { data } = await getProducts();
       setProducts(data);
     }
-  }
+  };
 
   const renderProductItem = (products: Product[]) => {
     let result: ReactNode = null;
@@ -97,6 +101,7 @@ export default memo(function Table() {
 const styles = StyleSheet.create({
   table: {
     marginVertical: 20,
+    marginHorizontal: 10,
     borderWidth: 1,
     borderColor: "#dee2e6",
   },

@@ -6,5 +6,5 @@ export const cvNumToCurrency = (number: number | string) => {
 }
 
 export const cvCurrencyToNum = (value: string) => {
-  return parseInt(value.replace(/,/g, ""));
+  return parseFloat(value.replace(/,/g, "")).toFixed(2);
 }

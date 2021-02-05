@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.tronghieu60s.tradecalculator"
     },
     "web": {
       "favicon": "./assets/favicon.png"

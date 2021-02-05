@@ -41,7 +41,7 @@ export default memo(function ProductCreate() {
 
   return (
     <View>
-      <View style={styles.absolute}>
+      <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={toggleModal}>
           <Text style={{ fontSize: 20, color: "#fff" }}>+</Text>
         </TouchableOpacity>
@@ -62,10 +62,9 @@ export default memo(function ProductCreate() {
 });
 
 const styles = StyleSheet.create({
-  absolute: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
+  container: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   button: {
     width: 60,
