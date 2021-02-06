@@ -18,11 +18,10 @@ export default memo(function SecondRoute() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  top: { height: "88%" },
+  top: { height: "80%" },
   bottom: {
-    height: "12%",
+    height: "20%",
     justifyContent: "center",
-    backgroundColor: "#f3f3f3",
     paddingHorizontal: 10,
   },
 });

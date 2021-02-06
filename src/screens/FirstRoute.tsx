@@ -3,11 +3,13 @@ import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Product, ProductCal } from "../../types";
 import ProductItemCal from "../components/Calculator/CalculatorItem";
+import Button from "../components/UI/Button";
 import ProductsContext from "../contexts/ProductsContext";
-import { cvNumToCurrency } from "../helpers/convert";
+import { cutDecimal, cvNumToCurrency } from "../helpers/convert";
 
 export default memo(function FirstRoute() {
   const { products } = useContext(ProductsContext);
+  const [showSelected, setShowSelected] = useState(false);
   const [total, setTotal] = useState(0);
   const [productsCal, setProductsCal] = useState<ProductCal[]>([]);
 
@@ -21,11 +23,12 @@ export default memo(function FirstRoute() {
   useEffect(() => {
     const selected = productsCal.filter((o) => o.select);
     const total = selected.reduce(
-      (t, { price_product, mass }) => t + price_product * parseFloat(mass || "0"),
+      (t, { price_product, mass }) =>
+        t + price_product * parseFloat(mass || "0"),
       0
     );
     setTotal(total);
-  }, [productsCal])
+  }, [productsCal]);
 
   const onSwitchChange = (id_product: number) => {
     let newProductsCal = productsCal.map((o) => {
@@ -43,10 +46,18 @@ export default memo(function FirstRoute() {
     setProductsCal(newProductsCal);
   };
 
+  const onResetSelected = () => {
+    let newProducts: ProductCal[] = products.map((o) => {
+      return { select: false, mass: "", ...o };
+    });
+    setProductsCal(newProducts);
+  };
+
   const renderProductItemCal = (products: ProductCal[]) => {
     let result: React.ReactNode = null;
     result = products.map((product) => {
       const { id_product, select, mass } = product;
+      if (showSelected && !select) return null;
       return (
         <ProductItemCal
           key={id_product}
@@ -63,7 +74,27 @@ export default memo(function FirstRoute() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.total}>{cvNumToCurrency(total)} VNĐ</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginBottom: 20,
+        }}
+      >
+        <Button
+          title={showSelected ? "Hiện Tất Cả SP" : "Hiện SP Đã Chọn"}
+          color="#fff"
+          background={showSelected ? "#2dce89" : "#5e72e4"}
+          onPress={() => setShowSelected(!showSelected)}
+        />
+        <Button
+          title="Reset"
+          color="#fff"
+          background="#f5365c"
+          onPress={onResetSelected}
+        />
+      </View>
+      <Text style={styles.total}>{cutDecimal(cvNumToCurrency(total))} VNĐ</Text>
       <ScrollView style={{ marginTop: 20 }}>
         {renderProductItemCal(productsCal)}
       </ScrollView>

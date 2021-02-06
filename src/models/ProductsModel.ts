@@ -2,7 +2,7 @@ import { Product } from "../../types";
 import { executeSql } from "../utils/SQLite";
 
 export const getProducts = () => {
-  return executeSql(`select * from products`, []);
+  return executeSql(`select * from products order by name_product`, []);
 };
 
 export const createProduct = (product: Product) => {

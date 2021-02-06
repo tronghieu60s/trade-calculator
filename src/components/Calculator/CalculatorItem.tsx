@@ -2,7 +2,7 @@ import React, { memo, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, TextInput, View } from "react-native";
 import { Switch } from "react-native-gesture-handler";
 import { Product, ProductCal } from "../../../types";
-import { cvNumToCurrency } from "../../helpers/convert";
+import { cutDecimal, cvNumToCurrency } from "../../helpers/convert";
 
 type Props = {
   product: ProductCal;
@@ -42,8 +42,6 @@ export default memo(function CalculatorItem(props: Props) {
         </View>
         <View style={styles.text}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>{id_product}</Text>
-            <Text style={{ marginHorizontal: 5 }}>{" - "}</Text>
             <Text style={styles.name}>{name_product}</Text>
           </View>
           <Text style={styles.price}>
@@ -64,7 +62,10 @@ export default memo(function CalculatorItem(props: Props) {
       </View>
       <View style={styles.total}>
         <Text style={[styles.totalText, { color }]}>
-          {cvNumToCurrency(price_product * parseFloat(input_value || "0"))} VNĐ
+          {cutDecimal(
+            cvNumToCurrency(price_product * parseFloat(input_value || "0"))
+          )}{" "}
+          VNĐ
         </Text>
       </View>
     </View>
@@ -78,10 +79,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 10,
     marginBottom: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 20,
-    borderWidth: 1.5,
     borderRadius: 4,
+    borderWidth: 1,
     backgroundColor: "#fff",
   },
   switch: {
@@ -95,8 +96,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   input: {
-    flex: 2,
+    flex: 3,
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
   },
   total: {
@@ -111,12 +113,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   name: {
-    color: "#f5365c",
+    color: "#5e72e4",
     fontSize: 17,
     fontWeight: "bold",
   },
   price: {
-    color: "#767577",
+    color: "#000",
     letterSpacing: 1,
     fontWeight: "bold",
   },

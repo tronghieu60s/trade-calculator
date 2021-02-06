@@ -28,7 +28,7 @@ export default memo(function Table() {
       ToastAndroid.show("Xóa sản phẩm thành công", ToastAndroid.SHORT);
 
       const { data } = await getProducts();
-      setProducts(data);
+      setProducts(data || []);
     }
   };
 
@@ -59,8 +59,9 @@ export default memo(function Table() {
   const renderProductItem = (products: Product[]) => {
     let result: ReactNode = null;
     if (products !== null)
-      result = products.map((product) => (
+      result = products.map((product, index) => (
         <ProductItem
+          index={index}
           key={product.id_product}
           product={product}
           onPressUpdate={onPressUpdate}
@@ -74,7 +75,7 @@ export default memo(function Table() {
     <ScrollView>
       <View style={styles.table}>
         <View style={styles.head}>
-          <Text style={[styles.text, { flex: 2 }]}>Mã SP</Text>
+          <Text style={[styles.text, { flex: 2 }]}>STT</Text>
           <Text style={[styles.text, { flex: 3 }]}>Tên sản phẩm</Text>
           <Text style={[styles.text, { flex: 3 }]}>Giá tiền / Kg</Text>
           <Text style={[styles.text, { flex: 2, borderRightWidth: 0 }]}>

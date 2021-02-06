@@ -6,13 +6,14 @@ import { cvNumToCurrency } from "../../helpers/convert";
 import { Ripple } from "../Themed";
 
 type Props = {
+  index: number;
   product: Product;
   onPressUpdate: (product: Product) => void;
   handleDeleteProduct: (id_product: number) => void;
 };
 
 export default memo(function ProductItem(props: Props) {
-  const { product, onPressUpdate, handleDeleteProduct } = props;
+  const { index, product, onPressUpdate, handleDeleteProduct } = props;
   const { id_product, name_product, price_product } = product;
 
   const onPressDelete = () => {
@@ -32,8 +33,10 @@ export default memo(function ProductItem(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.item, styles.itemCode]}>{id_product}</Text>
-      <Text style={[styles.item, { flex: 3 }]}>{name_product}</Text>
+      <Text style={[styles.item, styles.itemCode]}>{index + 1}</Text>
+      <View style={[styles.item, { flex: 3 }]}>
+        <Text style={styles.itemName}>{name_product}</Text>
+      </View>
       <Text style={[styles.item, { flex: 3 }]}>
         {cvNumToCurrency(price_product)}
       </Text>
@@ -66,6 +69,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: "#dee2e6",
     borderRightWidth: 1,
+  },
+  itemName: {
+    textAlign: "left",
+    color: "#f5365c",
+    fontWeight: "bold",
+    marginLeft: 10,
   },
   itemCode: {
     flex: 2,
